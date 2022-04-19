@@ -113,4 +113,172 @@ public class IssuingInvoiceRequest {
      * 商品細項
      */
     public List<ItemDataModel> items;
+
+    public String getMerchantID() {
+        return merchantID;
+    }
+
+    public void setMerchantID(String merchantID) {
+        this.merchantID = merchantID;
+    }
+
+    public String getRelateNumber() {
+        return relateNumber;
+    }
+
+    public void setRelateNumber(String relateNumber) {
+        this.relateNumber = relateNumber;
+    }
+
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
+    public String getCustomerIdentifier() {
+        return customerIdentifier;
+    }
+
+    public void setCustomerIdentifier(String customerIdentifier) {
+        this.customerIdentifier = customerIdentifier;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerAddr() {
+        return customerAddr;
+    }
+
+    public void setCustomerAddr(String customerAddr) {
+        this.customerAddr = customerAddr;
+    }
+
+    public String getCustomerPhone() {
+        return customerPhone;
+    }
+
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
+    public String getClearanceMark() {
+        return clearanceMark;
+    }
+
+    public void setClearanceMark(String clearanceMark) {
+        this.clearanceMark = clearanceMark;
+    }
+
+    public String getPrint() {
+        return print;
+    }
+
+    public void setPrint(String print) {
+        this.print = print;
+    }
+
+    public String getDonation() {
+        return donation;
+    }
+
+    public void setDonation(String donation) {
+        this.donation = donation;
+    }
+
+    public String getLoveCode() {
+        return loveCode;
+    }
+
+    public void setLoveCode(String loveCode) {
+        this.loveCode = loveCode;
+    }
+
+    public String getCarrierType() {
+        return carrierType;
+    }
+
+    public void setCarrierType(String carrierType) {
+        this.carrierType = carrierType;
+    }
+
+    public String getCarrierNum() {
+        return carrierNum;
+    }
+
+    public void setCarrierNum(String carrierNum) {
+        this.carrierNum = carrierNum;
+    }
+
+    public String getTaxType() {
+        return taxType;
+    }
+
+    public void setTaxType(String taxType) {
+        this.taxType = taxType;
+    }
+
+    public int getSpecialTaxType() {
+        return specialTaxType;
+    }
+
+    public void setSpecialTaxType(int specialTaxType) {
+        this.specialTaxType = specialTaxType;
+    }
+
+    public int getSalesAmount() {
+        return salesAmount;
+    }
+
+    public void setSalesAmount(int salesAmount) {
+        this.salesAmount = salesAmount;
+    }
+
+    public String getInvoiceRemark() {
+        return invoiceRemark;
+    }
+
+    public void setInvoiceRemark(String invoiceRemark) {
+        this.invoiceRemark = invoiceRemark;
+    }
+
+    public String getInvType() {
+        return invType;
+    }
+
+    public void setInvType(String invType) {
+        this.invType = invType;
+    }
+
+    public int getVat() {
+        return vat;
+    }
+
+    public void setVat(int vat) {
+        this.vat = vat;
+    }
+
+    public List<ItemDataModel> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemDataModel> items) {
+        this.items = items;
+    }
 }

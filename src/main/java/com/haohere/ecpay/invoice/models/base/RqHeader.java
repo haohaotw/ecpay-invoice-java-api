@@ -11,10 +11,26 @@ public class RqHeader {
      * 注意事項：
      * 若時間戳跟綠界接收到時間超過 10 分鐘時，交易會失敗無法進行
      */
-    public String timestamp;
+    public int timestamp;
 
     /**
      * 串接規格文件版號
      */
     public String revision;
+
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getRevision() {
+        return revision;
+    }
+
+    public void setRevision(String revision) {
+        this.revision = revision;
+    }
 }
