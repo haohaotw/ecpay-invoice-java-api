@@ -1,5 +1,6 @@
 package com.haohere.ecpay.invoice;
 
+import com.haohere.ecpay.invoice.impl.ECPayInvoiceClientImpl;
 import com.haohere.ecpay.invoice.util.AES;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,5 +36,4 @@ public class ECPayInvoiceDemoTest {
         var actual = URLDecoder.decode(decrypt, StandardCharsets.UTF_8);
         Assert.assertEquals(expected, actual);
     }
-
 }
