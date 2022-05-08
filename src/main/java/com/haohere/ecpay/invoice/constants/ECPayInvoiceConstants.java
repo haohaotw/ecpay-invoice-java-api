@@ -6,6 +6,8 @@ package com.haohere.ecpay.invoice.constants;
  */
 public interface ECPayInvoiceConstants {
 
+    String Revision = "3.0.0";
+
     String TEST_URL = "https://einvoice-stage.ecpay.com.tw/B2CInvoice/";
 
     String PROD_URL = "https://einvoice.ecpay.com.tw/B2CInvoice/";

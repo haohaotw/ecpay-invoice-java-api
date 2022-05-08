@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author haohao
- * @date 2022/4/13
+ * @date 2022/4/28
  */
-public class RqHeader {
-
+public class RpHeader {
     /**
      * 時間戳，格式為 Unix timestamp
      * 注意事項：
@@ -22,6 +21,8 @@ public class RqHeader {
     @JsonProperty(value = "Revision")
     public String revision;
 
+    @JsonProperty(value = "RqID")
+    public String rqID;
 
     public long getTimestamp() {
         return timestamp;
@@ -37,5 +38,13 @@ public class RqHeader {
 
     public void setRevision(String revision) {
         this.revision = revision;
+    }
+
+    public String getRqID() {
+        return rqID;
+    }
+
+    public void setRqID(String rqID) {
+        this.rqID = rqID;
     }
 }

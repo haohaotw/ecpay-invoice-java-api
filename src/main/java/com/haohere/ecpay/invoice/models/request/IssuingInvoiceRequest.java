@@ -1,5 +1,7 @@
 package com.haohere.ecpay.invoice.models.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -12,106 +14,127 @@ public class IssuingInvoiceRequest {
     /**
      * 特店編號
      */
+    @JsonProperty(value = "MerchantID")
     public String merchantID;
 
     /**
      * 特店自訂編號 (需為唯一值不可重複使用，請勿使用特殊符號)
      */
+    @JsonProperty(value = "RelateNumber")
     public String relateNumber;
 
     /**
      * 客戶編號
      */
+    @JsonProperty(value = "CustomerID")
     public String customerID;
 
     /**
      * 統一編號
      */
+    @JsonProperty(value = "CustomerIdentifier")
     public String customerIdentifier;
 
     /**
      * 客戶名稱
      */
+    @JsonProperty(value = "CustomerName")
     public String customerName;
 
     /**
      * 客戶地址
      */
+    @JsonProperty(value = "CustomerAddr")
     public String customerAddr;
 
     /**
      * 客戶手機號碼
      */
+    @JsonProperty(value = "CustomerPhone")
     public String customerPhone;
 
     /**
      * 客戶電子信箱
      */
+    @JsonProperty(value = "CustomerEmail")
     public String customerEmail;
 
     /**
      * 通關方式
      */
+    @JsonProperty(value = "ClearanceMark")
     public String clearanceMark;
 
     /**
      * 列印註記
      */
+    @JsonProperty(value = "Print")
     public String print;
 
     /**
      * 捐贈註記
      */
+    @JsonProperty(value = "Donation")
     public String donation;
 
     /**
      * 捐贈碼
      */
+    @JsonProperty(value = "LoveCode")
     public String loveCode;
 
     /**
      * 載具類別
      */
+    @JsonProperty(value = "CarrierType")
     public String carrierType;
 
     /**
      * 載具編號
      */
+    @JsonProperty(value = "CarrierNum")
     public String carrierNum;
 
     /**
      * 課稅類別
      */
+    @JsonProperty(value = "TaxType")
     public String taxType;
 
     /**
      * 特種稅額類別
      */
+    @JsonProperty(value = "SpecialTaxType")
     public int specialTaxType;
 
     /**
      * 發票總金額(含稅)
      */
+    @JsonProperty(value = "SalesAmount")
     public int salesAmount;
 
     /**
      * 發票備註
      */
+    @JsonProperty(value = "InvoiceRemark")
     public String invoiceRemark;
 
     /**
      * 字軌類別
      */
+    @JsonProperty(value = "InvType")
     public String invType;
 
     /**
      * 商品單價是否含稅
      */
-    public int vat;
+    @JsonProperty(value = "Vat")
+    public String vat;
 
     /**
      * 商品細項
      */
+    @JsonProperty(value = "Items")
     public List<ItemDataModel> items;
 
     public String getMerchantID() {
@@ -266,11 +289,11 @@ public class IssuingInvoiceRequest {
         this.invType = invType;
     }
 
-    public int getVat() {
+    public String getVat() {
         return vat;
     }
 
-    public void setVat(int vat) {
+    public void setVat(String vat) {
         this.vat = vat;
     }
 

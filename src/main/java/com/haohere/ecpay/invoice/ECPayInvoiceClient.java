@@ -1,5 +1,7 @@
 package com.haohere.ecpay.invoice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.haohere.ecpay.invoice.models.request.IssuingInvoiceRequest;
 import com.haohere.ecpay.invoice.models.response.IssuingInvoiceResponse;
 
 /**
@@ -10,7 +12,9 @@ public interface ECPayInvoiceClient {
 
     /**
      * 開立發票
+     * @param request
      * @return
+     * @throws JsonProcessingException
      */
-    IssuingInvoiceResponse createInvoice();
+    IssuingInvoiceResponse createInvoice(IssuingInvoiceRequest request);
 }
