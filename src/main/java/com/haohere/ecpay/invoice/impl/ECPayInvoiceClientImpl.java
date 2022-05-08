@@ -3,15 +3,19 @@ package com.haohere.ecpay.invoice.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haohere.ecpay.invoice.ECPayInvoiceClient;
 import com.haohere.ecpay.invoice.constants.ECPayInvoiceConstants;
+import com.haohere.ecpay.invoice.exception.ECPayInvoiceException;
 import com.haohere.ecpay.invoice.models.base.BaseRequest;
+import com.haohere.ecpay.invoice.models.base.BaseResponse;
 import com.haohere.ecpay.invoice.models.base.RqHeader;
 import com.haohere.ecpay.invoice.models.request.IssuingInvoiceRequest;
 import com.haohere.ecpay.invoice.models.response.IssuingInvoiceResponse;
 import com.haohere.ecpay.invoice.util.AES;
-import okhttp3.OkHttpClient;
+import okhttp3.*;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * @author haohao
@@ -46,8 +50,9 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
 
     @Override
     public IssuingInvoiceResponse createInvoice(IssuingInvoiceRequest issuingInvoiceRequest) {
+
+        var issuingInvoiceResponseDto = new IssuingInvoiceResponse();
         try {
-            var issuingInvoiceResponseDto = new IssuingInvoiceResponse();
 
             var baseRequest = new BaseRequest();
 
@@ -68,9 +73,36 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
 
             baseRequest.data = AES.encrypt(urlEncodeResult, hashKey, hashIV);
 
-        } catch (Exception e) {
+            var serializeBaseRequestObject = objectMapper.writeValueAsString(baseRequest);
 
+            RequestBody body = RequestBody.create(serializeBaseRequestObject, MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url(String.format("%s%s", baseUrl, "Issue"))
+                    .post(body)
+                    .build();
+
+            var response = client.newCall(request).execute();
+
+            if (response.isSuccessful()) {
+
+                var responseResult = objectMapper.readValue(Objects.requireNonNull(response.body()).string(), BaseResponse.class);
+
+                if (responseResult.transCode == 1) {
+
+                    var result = AES.decrypt(responseResult.data.toString(), hashKey, hashIV);
+
+                    var actual = URLDecoder.decode(result, StandardCharsets.UTF_8);
+
+                    issuingInvoiceResponseDto = objectMapper.readValue(actual, IssuingInvoiceResponse.class);
+
+                } else {
+                    throw new ECPayInvoiceException(responseResult.transMsg);
+                }
+            }
+        } catch (Exception e) {
+            throw new ECPayInvoiceException(e);
         }
-        return null;
+
+        return issuingInvoiceResponseDto;
     }
 }

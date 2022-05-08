@@ -43,14 +43,14 @@ public class ECPayInvoiceDemoTest {
     }
 
     @Test
-    public void testss() throws JsonProcessingException, ExecutionException, InterruptedException {
+    public void createInvoiceTest() throws JsonProcessingException, ExecutionException, InterruptedException {
 
         var client = new ECPayInvoiceClientImpl();
 
         var request = new IssuingInvoiceRequest();
 
         request.customerEmail = "feef@ewf.com";
-        request.setRelateNumber("2122DDW1");
+        request.setRelateNumber(String.valueOf(Math.random()));
         request.setCustomerName("Mark");
         request.setCustomerAddr("Taiwan");
         request.setCustomerIdentifier("");
@@ -72,6 +72,6 @@ public class ECPayInvoiceDemoTest {
         request.items = itemList;
 
         var obj  = client.createInvoice(request);
-        System.out.println(obj);
+        System.out.println(obj.rtnMsg);
     }
 }
