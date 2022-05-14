@@ -14,7 +14,8 @@ public interface ECPayInvoiceClient {
      * 開立發票
      * @param request
      * @return
-     * @throws JsonProcessingException
      */
     IssuingInvoiceResponse createInvoice(IssuingInvoiceRequest request);
+
+
 }
