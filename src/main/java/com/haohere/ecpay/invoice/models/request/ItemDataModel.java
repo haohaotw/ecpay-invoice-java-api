@@ -31,26 +31,31 @@ public class ItemDataModel {
     /**
      * 商品單位
      */
+    @JsonProperty(value = "ItemWord")
     public String itemWord;
 
     /**
      * 商品單價
      */
+    @JsonProperty(value = "ItemPrice")
     public int itemPrice;
 
     /**
      * 商品課稅別
      */
+    @JsonProperty(value = "ItemTaxType")
     public String itemTaxType;
 
     /**
      * 商品合計
      */
+    @JsonProperty(value = "ItemAmount")
     public int itemAmount;
 
     /**
      * 商品備註
      */
+    @JsonProperty(value = "ItemRemark")
     public String itemRemark;
 
     public ItemDataModel() {

@@ -2,7 +2,9 @@ package com.haohere.ecpay.invoice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.haohere.ecpay.invoice.models.request.IssuingInvoiceRequest;
+import com.haohere.ecpay.invoice.models.request.QueryInvoiceInfoRequest;
 import com.haohere.ecpay.invoice.models.response.IssuingInvoiceResponse;
+import com.haohere.ecpay.invoice.models.response.QueryInvoiceInfoResponse;
 
 /**
  * @author haohao
@@ -12,10 +14,16 @@ public interface ECPayInvoiceClient {
 
     /**
      * 開立發票
-     * @param request
+     * @param model
      * @return
      */
-    IssuingInvoiceResponse createInvoice(IssuingInvoiceRequest request);
+    IssuingInvoiceResponse createInvoice(IssuingInvoiceRequest model);
 
+    /**
+     * 查詢發票
+     * @param model
+     * @return
+     */
+    QueryInvoiceInfoResponse queryInvoice(QueryInvoiceInfoRequest model);
 
 }

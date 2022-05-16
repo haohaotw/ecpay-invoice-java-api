@@ -8,7 +8,9 @@ import com.haohere.ecpay.invoice.models.base.BaseRequest;
 import com.haohere.ecpay.invoice.models.base.BaseResponse;
 import com.haohere.ecpay.invoice.models.base.RqHeader;
 import com.haohere.ecpay.invoice.models.request.IssuingInvoiceRequest;
+import com.haohere.ecpay.invoice.models.request.QueryInvoiceInfoRequest;
 import com.haohere.ecpay.invoice.models.response.IssuingInvoiceResponse;
+import com.haohere.ecpay.invoice.models.response.QueryInvoiceInfoResponse;
 import com.haohere.ecpay.invoice.util.AES;
 import okhttp3.*;
 
@@ -49,7 +51,7 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
     }
 
     @Override
-    public IssuingInvoiceResponse createInvoice(IssuingInvoiceRequest issuingInvoiceRequest) {
+    public IssuingInvoiceResponse createInvoice(IssuingInvoiceRequest model) {
 
         var issuingInvoiceResponseDto = new IssuingInvoiceResponse();
         try {
@@ -65,9 +67,9 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
 
             baseRequest.rqHeader = rqHeader;
 
-            issuingInvoiceRequest.merchantID = merchantID;
+            model.merchantID = merchantID;
 
-            var serializeObject = objectMapper.writeValueAsString(issuingInvoiceRequest);
+            var serializeObject = objectMapper.writeValueAsString(model);
 
             var urlEncodeResult = URLEncoder.encode(serializeObject, StandardCharsets.UTF_8);
 
@@ -104,5 +106,64 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
         }
 
         return issuingInvoiceResponseDto;
+    }
+
+    @Override
+    public QueryInvoiceInfoResponse queryInvoice(QueryInvoiceInfoRequest model) {
+
+        var queryInvoiceInfoResponse = new QueryInvoiceInfoResponse();
+
+        try {
+
+            var baseRequest = new BaseRequest();
+
+            baseRequest.merchantID = merchantID;
+
+            var rqHeader = new RqHeader();
+
+            rqHeader.revision = ECPayInvoiceConstants.Revision;
+            rqHeader.timestamp = System.currentTimeMillis() / 1000L;
+
+            baseRequest.rqHeader = rqHeader;
+
+            model.merchantID = merchantID;
+
+            var serializeObject = objectMapper.writeValueAsString(model);
+
+            var urlEncodeResult = URLEncoder.encode(serializeObject, StandardCharsets.UTF_8);
+
+            baseRequest.data = AES.encrypt(urlEncodeResult, hashKey, hashIV);
+
+            var serializeBaseRequestObject = objectMapper.writeValueAsString(baseRequest);
+
+            RequestBody body = RequestBody.create(serializeBaseRequestObject, MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url(String.format("%s%s", baseUrl, "GetIssue"))
+                    .post(body)
+                    .build();
+
+            var response = client.newCall(request).execute();
+
+            if (response.isSuccessful()) {
+
+                var responseResult = objectMapper.readValue(Objects.requireNonNull(response.body()).string(), BaseResponse.class);
+
+                if (responseResult.transCode == 1) {
+
+                    var result = AES.decrypt(responseResult.data.toString(), hashKey, hashIV);
+
+                    var actual = URLDecoder.decode(result, StandardCharsets.UTF_8);
+
+                    queryInvoiceInfoResponse = objectMapper.readValue(actual, QueryInvoiceInfoResponse.class);
+
+                } else {
+                    throw new ECPayInvoiceException(responseResult.transMsg);
+                }
+            }
+        } catch (Exception e) {
+            throw new ECPayInvoiceException(e);
+        }
+
+        return queryInvoiceInfoResponse;
     }
 }

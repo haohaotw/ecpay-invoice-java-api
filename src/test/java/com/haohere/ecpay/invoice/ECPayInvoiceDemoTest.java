@@ -1,9 +1,11 @@
 package com.haohere.ecpay.invoice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haohere.ecpay.invoice.impl.ECPayInvoiceClientImpl;
 import com.haohere.ecpay.invoice.models.request.IssuingInvoiceRequest;
 import com.haohere.ecpay.invoice.models.request.ItemDataModel;
+import com.haohere.ecpay.invoice.models.request.QueryInvoiceInfoRequest;
 import com.haohere.ecpay.invoice.util.AES;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,6 +24,9 @@ public class ECPayInvoiceDemoTest {
 
     private final String KEY = "A123456789012345";
     private final String IV = "B123456789012345";
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     @Test
     public void encryptDemoTest() {
@@ -43,7 +48,7 @@ public class ECPayInvoiceDemoTest {
     }
 
     @Test
-    public void createInvoiceTest() throws JsonProcessingException, ExecutionException, InterruptedException {
+    public void createInvoiceTest() throws JsonProcessingException {
 
         var client = new ECPayInvoiceClientImpl();
 
@@ -71,7 +76,23 @@ public class ECPayInvoiceDemoTest {
 
         request.items = itemList;
 
-        var obj  = client.createInvoice(request);
-        System.out.println(obj.rtnMsg);
+        var obj = client.createInvoice(request);
+
+        System.out.println(objectMapper.writeValueAsString(obj));
+
+    }
+
+
+    @Test
+    public void queryInvoiceTest() throws JsonProcessingException {
+
+        var client = new ECPayInvoiceClientImpl();
+
+        var request = new QueryInvoiceInfoRequest();
+
+        request.relateNumber = "0.073367948453556095";
+
+        var obj = client.queryInvoice(request);
+        System.out.println(objectMapper.writeValueAsString(obj));
     }
 }
