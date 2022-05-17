@@ -14,7 +14,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+
 
 /**
  * @author haohao
@@ -90,7 +90,7 @@ public class ECPayInvoiceDemoTest {
 
         var request = new QueryInvoiceInfoRequest();
 
-        request.relateNumber = "0.073367948453556095";
+        request.relateNumber = "0.7450871113178459";
 
         var obj = client.queryInvoice(request);
         System.out.println(objectMapper.writeValueAsString(obj));

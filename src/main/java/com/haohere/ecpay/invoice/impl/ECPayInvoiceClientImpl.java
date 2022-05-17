@@ -1,5 +1,6 @@
 package com.haohere.ecpay.invoice.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haohere.ecpay.invoice.ECPayInvoiceClient;
 import com.haohere.ecpay.invoice.constants.ECPayInvoiceConstants;
@@ -54,30 +55,14 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
     public IssuingInvoiceResponse createInvoice(IssuingInvoiceRequest model) {
 
         var issuingInvoiceResponseDto = new IssuingInvoiceResponse();
+
+
         try {
-
-            var baseRequest = new BaseRequest();
-
-            baseRequest.merchantID = merchantID;
-
-            var rqHeader = new RqHeader();
-
-            rqHeader.revision = ECPayInvoiceConstants.Revision;
-            rqHeader.timestamp = System.currentTimeMillis() / 1000L;
-
-            baseRequest.rqHeader = rqHeader;
 
             model.merchantID = merchantID;
 
-            var serializeObject = objectMapper.writeValueAsString(model);
+            var body = handleBaseRequest(model);
 
-            var urlEncodeResult = URLEncoder.encode(serializeObject, StandardCharsets.UTF_8);
-
-            baseRequest.data = AES.encrypt(urlEncodeResult, hashKey, hashIV);
-
-            var serializeBaseRequestObject = objectMapper.writeValueAsString(baseRequest);
-
-            RequestBody body = RequestBody.create(serializeBaseRequestObject, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
                     .url(String.format("%s%s", baseUrl, "Issue"))
                     .post(body)
@@ -96,6 +81,7 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
                     var actual = URLDecoder.decode(result, StandardCharsets.UTF_8);
 
                     issuingInvoiceResponseDto = objectMapper.readValue(actual, IssuingInvoiceResponse.class);
+                    issuingInvoiceResponseDto.relateNumber = model.relateNumber;
 
                 } else {
                     throw new ECPayInvoiceException(responseResult.transMsg);
@@ -115,28 +101,10 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
 
         try {
 
-            var baseRequest = new BaseRequest();
-
-            baseRequest.merchantID = merchantID;
-
-            var rqHeader = new RqHeader();
-
-            rqHeader.revision = ECPayInvoiceConstants.Revision;
-            rqHeader.timestamp = System.currentTimeMillis() / 1000L;
-
-            baseRequest.rqHeader = rqHeader;
-
             model.merchantID = merchantID;
 
-            var serializeObject = objectMapper.writeValueAsString(model);
+            var body = handleBaseRequest(model);
 
-            var urlEncodeResult = URLEncoder.encode(serializeObject, StandardCharsets.UTF_8);
-
-            baseRequest.data = AES.encrypt(urlEncodeResult, hashKey, hashIV);
-
-            var serializeBaseRequestObject = objectMapper.writeValueAsString(baseRequest);
-
-            RequestBody body = RequestBody.create(serializeBaseRequestObject, MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
                     .url(String.format("%s%s", baseUrl, "GetIssue"))
                     .post(body)
@@ -165,5 +133,31 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
         }
 
         return queryInvoiceInfoResponse;
+    }
+
+    private <T> RequestBody handleBaseRequest(T model) throws JsonProcessingException {
+
+        var baseRequest = new BaseRequest();
+
+        baseRequest.merchantID = merchantID;
+
+        var rqHeader = new RqHeader();
+
+        rqHeader.revision = ECPayInvoiceConstants.Revision;
+        rqHeader.timestamp = System.currentTimeMillis() / 1000L;
+
+        baseRequest.rqHeader = rqHeader;
+
+        var serializeObject = objectMapper.writeValueAsString(model);
+
+        var urlEncodeResult = URLEncoder.encode(serializeObject, StandardCharsets.UTF_8);
+
+        baseRequest.data = AES.encrypt(urlEncodeResult, hashKey, hashIV);
+
+        var serializeBaseRequestObject = objectMapper.writeValueAsString(baseRequest);
+
+        RequestBody body = RequestBody.create(serializeBaseRequestObject, MediaType.get("application/json; charset=utf-8"));
+
+        return body;
     }
 }
