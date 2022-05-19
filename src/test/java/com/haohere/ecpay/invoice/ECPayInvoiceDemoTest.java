@@ -25,9 +25,6 @@ public class ECPayInvoiceDemoTest {
     private final String KEY = "A123456789012345";
     private final String IV = "B123456789012345";
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-
     @Test
     public void encryptDemoTest() {
         var expected = "7woM9RorZKAtXJRVccAb0qhHYm+5lnlhBzyfh5EZdNck7PacNsRHgv/Jvp//ajJidqcQcs0UmAgPQVjXQHeziw==";
@@ -47,52 +44,5 @@ public class ECPayInvoiceDemoTest {
         Assert.assertEquals(expected, actual);
     }
 
-    @Test
-    public void createInvoiceTest() throws JsonProcessingException {
 
-        var client = new ECPayInvoiceClientImpl();
-
-        var request = new IssuingInvoiceRequest();
-
-        request.customerEmail = "feef@ewf.com";
-        request.setRelateNumber(String.valueOf(Math.random()));
-        request.setCustomerName("Mark");
-        request.setCustomerAddr("Taiwan");
-        request.setCustomerIdentifier("");
-        request.setCustomerPhone("0912345678");
-        request.setCarrierType("");
-        request.setCarrierNum("");
-        request.setInvType("07");
-        request.setInvoiceRemark("測試@@%$#@$$$@^^$&");
-        request.setPrint("0");
-        request.setDonation("1");
-        request.setTaxType("1");
-        request.setLoveCode("1234");
-        request.setSalesAmount(100);
-        request.setVat("1");
-
-        var itemList = new ArrayList<ItemDataModel>();
-        itemList.add(new ItemDataModel(0, "運動用品", 1, "箱子", 100, null, 100, "備註"));
-
-        request.items = itemList;
-
-        var obj = client.createInvoice(request);
-
-        System.out.println(objectMapper.writeValueAsString(obj));
-
-    }
-
-
-    @Test
-    public void queryInvoiceTest() throws JsonProcessingException {
-
-        var client = new ECPayInvoiceClientImpl();
-
-        var request = new QueryInvoiceInfoRequest();
-
-        request.relateNumber = "0.7450871113178459";
-
-        var obj = client.queryInvoice(request);
-        System.out.println(objectMapper.writeValueAsString(obj));
-    }
 }
