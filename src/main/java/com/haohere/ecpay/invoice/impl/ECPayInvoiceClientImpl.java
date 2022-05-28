@@ -9,9 +9,11 @@ import com.haohere.ecpay.invoice.models.base.BaseRequest;
 import com.haohere.ecpay.invoice.models.base.BaseResponse;
 import com.haohere.ecpay.invoice.models.base.RqHeader;
 import com.haohere.ecpay.invoice.models.request.InvalidInvoiceRequest;
+import com.haohere.ecpay.invoice.models.request.IssuingAllowanceRequest;
 import com.haohere.ecpay.invoice.models.request.IssuingInvoiceRequest;
 import com.haohere.ecpay.invoice.models.request.QueryInvoiceInfoRequest;
 import com.haohere.ecpay.invoice.models.response.InvalidInvoiceResponse;
+import com.haohere.ecpay.invoice.models.response.IssuingAllowanceResponse;
 import com.haohere.ecpay.invoice.models.response.IssuingInvoiceResponse;
 import com.haohere.ecpay.invoice.models.response.QueryInvoiceInfoResponse;
 import com.haohere.ecpay.invoice.util.AES;
@@ -37,7 +39,7 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
     private final OkHttpClient client = new OkHttpClient();
 
 
-    public ECPayInvoiceClientImpl(String hashKey, String hashIV, String merchantID, String baseUrl) {
+    public ECPayInvoiceClientImpl(String hashKey, String hashIV, String merchantID) {
         this.hashKey = hashKey;
         this.hashIV = hashIV;
         this.merchantID = merchantID;
@@ -176,6 +178,47 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
         }
 
         return invalidInvoiceResponse;
+    }
+
+
+    @Override
+    public IssuingAllowanceResponse createAllowance(IssuingAllowanceRequest model) {
+        var issuingAllowanceResponse = new IssuingAllowanceResponse();
+
+        try {
+
+            model.merchantID = merchantID;
+
+            var body = handleBaseRequest(model);
+
+            Request request = new Request.Builder()
+                    .url(String.format("%s%s", baseUrl, "Allowance"))
+                    .post(body)
+                    .build();
+
+            var response = client.newCall(request).execute();
+
+            if (response.isSuccessful()) {
+
+                var responseResult = objectMapper.readValue(Objects.requireNonNull(response.body()).string(), BaseResponse.class);
+
+                if (responseResult.transCode == 1) {
+
+                    var result = AES.decrypt(responseResult.data.toString(), hashKey, hashIV);
+
+                    var actual = URLDecoder.decode(result, StandardCharsets.UTF_8);
+
+                    issuingAllowanceResponse = objectMapper.readValue(actual, IssuingAllowanceResponse.class);
+
+                } else {
+                    throw new ECPayInvoiceException(responseResult.transMsg);
+                }
+            }
+        } catch (Exception e) {
+            throw new ECPayInvoiceException(e);
+        }
+
+        return issuingAllowanceResponse;
     }
 
     private <T> RequestBody handleBaseRequest(T model) throws JsonProcessingException {

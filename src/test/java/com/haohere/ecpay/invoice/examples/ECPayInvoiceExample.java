@@ -3,10 +3,7 @@ package com.haohere.ecpay.invoice.examples;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haohere.ecpay.invoice.impl.ECPayInvoiceClientImpl;
-import com.haohere.ecpay.invoice.models.request.InvalidInvoiceRequest;
-import com.haohere.ecpay.invoice.models.request.IssuingInvoiceRequest;
-import com.haohere.ecpay.invoice.models.request.ItemDataModel;
-import com.haohere.ecpay.invoice.models.request.QueryInvoiceInfoRequest;
+import com.haohere.ecpay.invoice.models.request.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -80,6 +77,37 @@ public class ECPayInvoiceExample {
         request.reason = "作廢測試";
 
         var obj = client.invalidInvoice(request);
+        System.out.println(objectMapper.writeValueAsString(obj));
+    }
+
+    @Test
+    public void createAllowanceTest() throws JsonProcessingException {
+
+        var client = new ECPayInvoiceClientImpl();
+
+        var request = new IssuingAllowanceRequest();
+
+        request.invoiceNo = "VJ21008302";
+        request.invoiceDate = "2022-05-28";
+        request.allowanceNotify = "N";
+        request.customerName = "Mark";
+        request.allowanceAmount = 50;
+        var itemList = new ArrayList<ItemDataModel>();
+        itemList.add(new ItemDataModel(
+                0,
+                "運動用品",
+                1,
+                "箱子",
+                50,
+                null,
+                50,
+                "備註"
+        ));
+
+        request.items = itemList;
+
+
+        var obj = client.createAllowance(request);
         System.out.println(objectMapper.writeValueAsString(obj));
     }
 }
