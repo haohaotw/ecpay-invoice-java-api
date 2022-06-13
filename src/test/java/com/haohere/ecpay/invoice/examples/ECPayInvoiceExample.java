@@ -23,7 +23,7 @@ public class ECPayInvoiceExample {
 
         var request = new IssuingInvoiceRequest();
 
-        request.customerEmail = "feef@ewf.com";
+        request.customerEmail = "test@ecpay.com.tw";
         request.setRelateNumber(String.valueOf(Math.random()));
         request.setCustomerName("Mark");
         request.setCustomerAddr("Taiwan");
@@ -37,11 +37,19 @@ public class ECPayInvoiceExample {
         request.setDonation("1");
         request.setTaxType("1");
         request.setLoveCode("1234");
-        request.setSalesAmount(100);
+        request.setSalesAmount(1000);
         request.setVat("1");
 
         var itemList = new ArrayList<ItemDataModel>();
-        itemList.add(new ItemDataModel(0, "運動用品", 1, "箱子", 100, null, 100, "備註"));
+        itemList.add(new ItemDataModel(
+                0,
+                "運動用品",
+                1,
+                "箱子", 1000,
+                null,
+                1000,
+                "備註"
+        ));
 
         request.items = itemList;
 
@@ -108,6 +116,38 @@ public class ECPayInvoiceExample {
 
 
         var obj = client.createAllowance(request);
+        System.out.println(objectMapper.writeValueAsString(obj));
+    }
+
+    @Test
+    public void createAllowanceByCollegiateTest() throws JsonProcessingException {
+
+        var client = new ECPayInvoiceClientImpl();
+
+        var request = new IssuingAllowanceByCollegiateRequest();
+
+        request.invoiceNo = "VJ21052853";
+        request.invoiceDate = "2022-06-11";
+        request.allowanceNotify = "E";
+        request.notifyMail = "test@ecpay.com.tw";
+        request.customerName = "Mark";
+        request.allowanceAmount = 50;
+        var itemList = new ArrayList<ItemDataModel>();
+        itemList.add(new ItemDataModel(
+                0,
+                "運動用品",
+                1,
+                "箱子",
+                50,
+                null,
+                50,
+                "備註"
+        ));
+
+        request.items = itemList;
+
+
+        var obj = client.createAllowanceByCollegiate(request);
         System.out.println(objectMapper.writeValueAsString(obj));
     }
 }

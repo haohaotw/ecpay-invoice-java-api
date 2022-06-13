@@ -8,14 +8,8 @@ import com.haohere.ecpay.invoice.exception.ECPayInvoiceException;
 import com.haohere.ecpay.invoice.models.base.BaseRequest;
 import com.haohere.ecpay.invoice.models.base.BaseResponse;
 import com.haohere.ecpay.invoice.models.base.RqHeader;
-import com.haohere.ecpay.invoice.models.request.InvalidInvoiceRequest;
-import com.haohere.ecpay.invoice.models.request.IssuingAllowanceRequest;
-import com.haohere.ecpay.invoice.models.request.IssuingInvoiceRequest;
-import com.haohere.ecpay.invoice.models.request.QueryInvoiceInfoRequest;
-import com.haohere.ecpay.invoice.models.response.InvalidInvoiceResponse;
-import com.haohere.ecpay.invoice.models.response.IssuingAllowanceResponse;
-import com.haohere.ecpay.invoice.models.response.IssuingInvoiceResponse;
-import com.haohere.ecpay.invoice.models.response.QueryInvoiceInfoResponse;
+import com.haohere.ecpay.invoice.models.request.*;
+import com.haohere.ecpay.invoice.models.response.*;
 import com.haohere.ecpay.invoice.util.AES;
 import okhttp3.*;
 
@@ -219,6 +213,47 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
         }
 
         return issuingAllowanceResponse;
+    }
+
+    @Override
+    public IssuingAllowanceByCollegiateResponse createAllowanceByCollegiate(IssuingAllowanceByCollegiateRequest model) {
+
+        var issuingAllowanceByCollegiateResponse = new IssuingAllowanceByCollegiateResponse();
+
+        try {
+
+            model.merchantID = merchantID;
+
+            var body = handleBaseRequest(model);
+
+            Request request = new Request.Builder()
+                    .url(String.format("%s%s", baseUrl, "Allowance"))
+                    .post(body)
+                    .build();
+
+            var response = client.newCall(request).execute();
+
+            if (response.isSuccessful()) {
+
+                var responseResult = objectMapper.readValue(Objects.requireNonNull(response.body()).string(), BaseResponse.class);
+
+                if (responseResult.transCode == 1) {
+
+                    var result = AES.decrypt(responseResult.data.toString(), hashKey, hashIV);
+
+                    var actual = URLDecoder.decode(result, StandardCharsets.UTF_8);
+
+                    issuingAllowanceByCollegiateResponse = objectMapper.readValue(actual, IssuingAllowanceByCollegiateResponse.class);
+
+                } else {
+                    throw new ECPayInvoiceException(responseResult.transMsg);
+                }
+            }
+        } catch (Exception e) {
+            throw new ECPayInvoiceException(e);
+        }
+
+        return issuingAllowanceByCollegiateResponse;
     }
 
     private <T> RequestBody handleBaseRequest(T model) throws JsonProcessingException {
