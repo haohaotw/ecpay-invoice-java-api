@@ -256,6 +256,89 @@ public class ECPayInvoiceClientImpl implements ECPayInvoiceClient {
         return issuingAllowanceByCollegiateResponse;
     }
 
+
+    @Override
+    public InvalidAllowanceResponse invalidAllowance(InvalidAllowanceRequest model) {
+
+        var invalidAllowanceResponse = new InvalidAllowanceResponse();
+
+        try {
+
+            model.merchantID = merchantID;
+
+            var body = handleBaseRequest(model);
+
+            Request request = new Request.Builder()
+                    .url(String.format("%s%s", baseUrl, "AllowanceInvalid"))
+                    .post(body)
+                    .build();
+
+            var response = client.newCall(request).execute();
+
+            if (response.isSuccessful()) {
+
+                var responseResult = objectMapper.readValue(Objects.requireNonNull(response.body()).string(), BaseResponse.class);
+
+                if (responseResult.transCode == 1) {
+
+                    var result = AES.decrypt(responseResult.data.toString(), hashKey, hashIV);
+
+                    var actual = URLDecoder.decode(result, StandardCharsets.UTF_8);
+
+                    invalidAllowanceResponse = objectMapper.readValue(actual, InvalidAllowanceResponse.class);
+
+                } else {
+                    throw new ECPayInvoiceException(responseResult.transMsg);
+                }
+            }
+        } catch (Exception e) {
+            throw new ECPayInvoiceException(e);
+        }
+
+        return invalidAllowanceResponse;
+    }
+
+    @Override
+    public InvalidAllowanceByCollegiateResponse invalidAllowanceByCollegiate(InvalidAllowanceByCollegiateRequest model) {
+
+        var invalidAllowanceByCollegiateResponse = new InvalidAllowanceByCollegiateResponse();
+
+        try {
+
+            model.merchantID = merchantID;
+
+            var body = handleBaseRequest(model);
+
+            Request request = new Request.Builder()
+                    .url(String.format("%s%s", baseUrl, "AllowanceInvalidByCollegiate"))
+                    .post(body)
+                    .build();
+
+            var response = client.newCall(request).execute();
+
+            if (response.isSuccessful()) {
+
+                var responseResult = objectMapper.readValue(Objects.requireNonNull(response.body()).string(), BaseResponse.class);
+
+                if (responseResult.transCode == 1) {
+
+                    var result = AES.decrypt(responseResult.data.toString(), hashKey, hashIV);
+
+                    var actual = URLDecoder.decode(result, StandardCharsets.UTF_8);
+
+                    invalidAllowanceByCollegiateResponse = objectMapper.readValue(actual, InvalidAllowanceByCollegiateResponse.class);
+
+                } else {
+                    throw new ECPayInvoiceException(responseResult.transMsg);
+                }
+            }
+        } catch (Exception e) {
+            throw new ECPayInvoiceException(e);
+        }
+
+        return invalidAllowanceByCollegiateResponse;
+    }
+
     private <T> RequestBody handleBaseRequest(T model) throws JsonProcessingException {
 
         var baseRequest = new BaseRequest();

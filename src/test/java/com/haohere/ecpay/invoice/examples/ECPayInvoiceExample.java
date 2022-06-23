@@ -150,4 +150,38 @@ public class ECPayInvoiceExample {
         var obj = client.createAllowanceByCollegiate(request);
         System.out.println(objectMapper.writeValueAsString(obj));
     }
+
+
+    @Test
+    public void InvalidAllowanceTest() throws JsonProcessingException {
+
+        var client = new ECPayInvoiceClientImpl();
+
+        var request = new InvalidAllowanceRequest();
+
+        request.invoiceNo = "VJ70006673";
+        request.allowanceNo = "2022062321401329";
+        request.reason = "test";
+
+
+        var obj = client.invalidAllowance(request);
+        System.out.println(objectMapper.writeValueAsString(obj));
+    }
+
+    @Test
+    public void InvalidAllowanceByCollegiateTest() throws JsonProcessingException {
+
+        var client = new ECPayInvoiceClientImpl();
+
+        var request = new InvalidAllowanceByCollegiateRequest();
+
+        request.invoiceNo = "VJ70009780";
+        request.allowanceNo = "2022062317485597";
+        request.reason = "test";
+
+
+        var obj = client.invalidAllowanceByCollegiate(request);
+        System.out.println(objectMapper.writeValueAsString(obj));
+    }
+
 }

@@ -50,5 +50,18 @@ public interface ECPayInvoiceClient {
      */
     IssuingAllowanceByCollegiateResponse createAllowanceByCollegiate(IssuingAllowanceByCollegiateRequest model);
 
+    /**
+     * 作廢折讓 (線上同議)
+     * @param model
+     * @return
+     */
+    InvalidAllowanceResponse invalidAllowance(InvalidAllowanceRequest model);
 
+
+    /**
+     * 作廢折讓 (線上同議)
+     * @param model
+     * @return
+     */
+    InvalidAllowanceByCollegiateResponse invalidAllowanceByCollegiate(InvalidAllowanceByCollegiateRequest model);
 }
