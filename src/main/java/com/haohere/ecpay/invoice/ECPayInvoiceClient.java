@@ -51,7 +51,7 @@ public interface ECPayInvoiceClient {
     IssuingAllowanceByCollegiateResponse createAllowanceByCollegiate(IssuingAllowanceByCollegiateRequest model);
 
     /**
-     * 作廢折讓 (線上同議)
+     * 作廢折讓 (紙本同意)
      * @param model
      * @return
      */
@@ -59,7 +59,7 @@ public interface ECPayInvoiceClient {
 
 
     /**
-     * 作廢折讓 (線上同議)
+     * 作廢折讓 (線上同意)
      * @param model
      * @return
      */
