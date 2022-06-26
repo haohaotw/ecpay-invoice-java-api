@@ -17,12 +17,12 @@ ecpay-invoice-java-api 是一個輕量級 JAVA SDK ，可用於綠界電子發�
 ##  安裝
 
 ```
-
+<dependency>
+    <groupId>com.haohere.ecpay</groupId>
+    <artifactId>ecpay-invoice-java-api</artifactId>
+    <version>1.1</version>
+</dependency>
 ```
-
-
-## 範例
-
 
 ## 貢獻
 
